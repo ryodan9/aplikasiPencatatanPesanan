@@ -1,0 +1,217 @@
+{% extends 'layout/index.html' %}
+
+{% block title %}Report Page{% endblock %}
+
+{% block body %}
+
+<div class="page-heading">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last mb-3">
+                <h3>Report Page</h3>
+                <p class="text-subtitle text-muted">Page untuk melihat seluruh pesanan dan mencetak laporan.</p>
+                <!-- Modal Report -->
+                <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#inlineForm1">
+                    Report Bulanan
+                </button>
+                
+                <div class="modal fade text-left" id="inlineForm1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                        role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel33">Cetak Laporan</h4>
+                                <button type="button" class="close" data-bs-dismiss="modal"
+                                    aria-label="Close">
+                                    <i data-feather="x"></i>
+                                </button>
+                            </div>
+                            <form action="{{url_for('month_report')}}" method="POST">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="bulan">Bulan :</label>
+                                        <select class="form-select col-10" id="inputGroupSelect01" name="bulan" required>
+                                            <option selected disabled>Choose...</option>
+                                            {% for bulan, tahun in month_year %}
+                                            <option value="{{bulan}}">{{ bulan|month_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tahun">Tahun :</label>
+                                        <select class="form-select col-10" id="inputGroupSelect01" name="tahun" required>
+                                            <option selected disabled>Choose...</option>
+                                            {% for bulan, tahun in month_year %}
+                                            <option value="{{tahun}}">{{ tahun }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    
+                                    
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-light-secondary"
+                                        data-bs-dismiss="modal">
+                                        <i class="bx bx-x d-block d-sm-none"></i>
+                                        <span class="d-none d-sm-block">Close</span>
+                                    </button>
+                                    <button type="submit" name="tambah" class="btn btn-primary ml-1">
+                                        <i class="bx bx-check d-block d-sm-none"></i>
+                                        <span class="d-none d-sm-block">Print</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal Report Tahunan-->
+                <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#yearReport">
+                    Report Tahunan
+                </button>
+                
+                <div class="modal fade text-left" id="yearReport" tabindex="-1" role="dialog" aria-labelledby="yearReportModal" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                        role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="yearReportModal">Cetak Laporan</h4>
+                                <button type="button" class="close" data-bs-dismiss="modal"
+                                    aria-label="Close">
+                                    <i data-feather="x"></i>
+                                </button>
+                            </div>
+                            <form action="{{url_for('year_report')}}" method="POST">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="tahun">Tahun :</label>
+                                        <select class="form-select col-10" id="inputGroupSelect01" name="tahun" required>
+                                            <option selected disabled>Choose...</option>
+                                            {% for bulan, tahun in month_year %}
+                                            <option value="{{tahun}}">{{ tahun }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    
+                                    
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-light-secondary"
+                                        data-bs-dismiss="modal">
+                                        <i class="bx bx-x d-block d-sm-none"></i>
+                                        <span class="d-none d-sm-block">Close</span>
+                                    </button>
+                                    <button type="submit" name="tambah" class="btn btn-primary ml-1">
+                                        <i class="bx bx-check d-block d-sm-none"></i>
+                                        <span class="d-none d-sm-block">Print</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <section class="section">
+        <div class="card">
+            <div class="card-header">
+                Data Order
+            </div>
+            <div class="card-body">
+                <table class="table table-striped" id="myTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nama</th>
+                            <th>Jumlah Order</th>
+                            <th>Alamat</th>
+                            <th>Total Harga</th>
+                            <th>Status</th>
+                            <th class="col-1">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{ order.nama_pemesan }}</td>
+                            <td>{{ order.quantity|quantity_format }}</td>
+                            <td>{{ order.alamat }}</td>
+                            <td>{{ order.total_harga|currency_format }}</td>
+                            <td>
+                                {% if order.status == "In Progress" %}
+                                <span class="badge bg-danger">In Progress</span>
+                                {% else %}
+                                <span class="badge bg-success">Completed</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-outline-primary btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#inlineForm{{order.id}}">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <div class="modal fade text-left" id="inlineForm{{order.id}}" tabindex="-1" role="dialog" aria-labelledby="viewModal" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                                        role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="viewModal">Order Detail</h4>
+                                                <button type="button" class="close" data-bs-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <i data-feather="x"></i>
+                                                </button>
+                                            </div>
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <label for="nama">Nama :</label>
+                                                        <input type="text" name="nama" class="form-control" value="{{order.nama_pemesan}}" disabled>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="quantity">Jumlah :</label>
+                                                        <input type="text" name="quantity" class="form-control" value="{{order.quantity|quantity_format}}" disabled>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="jelly">Jelly :</label>
+                                                        <input type="text" name="jelly" class="form-control" value="{{order.jelly}}" disabled>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="alamat">Alamat :</label>
+                                                        <textarea class="form-control" id="exampleFormControlTextarea1"
+                                                            rows="2" readonly>{{ order.alamat }}</textarea>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="total_harga">Total Harga :</label>
+                                                        <input type="text" name="total_harga" class="form-control" value="{{order.total_harga|currency_format}}" disabled>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="tanggal">Tanggal Memesan :</label>
+                                                        <input type="text" name="tanggal" class="form-control" value="{{order.tanggal}}" disabled>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="status">Status :</label>
+                                                        <input type="text" name="status" class="form-control" value="{{order.status}}" disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-light-secondary"
+                                                        data-bs-dismiss="modal">
+                                                        <i class="bx bx-x d-block d-sm-none"></i>
+                                                        <span class="d-none d-sm-block">Close</span>
+                                                    </button>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+</div>
+
+{% endblock %}

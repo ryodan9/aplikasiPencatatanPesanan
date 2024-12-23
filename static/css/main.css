@@ -1,0 +1,19 @@
+.card-data {
+    background-color: #f8f9fa;  /* Warna latar belakang putih */
+    border: 1px solid #dee2e6;   /* Border abu-abu muda */
+}
+
+.card-data .card-header {
+    background-color: #f1f3f5;  /* Warna header lebih terang */
+    color: #343a40;  /* Teks header abu-abu tua */
+}
+
+.card-form {
+    background-color: #DCE9FD;  /* Warna latar belakang biru muda */
+    border: 1px solid #007bff;   /* Border biru */
+}
+
+.card-form .card-header {
+    background-color: #CDE0FF;  /* Warna header hijau terang */
+    color: #155724;  /* Teks header hijau tua */
+}

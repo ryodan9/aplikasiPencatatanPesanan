@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+
+    <link rel="stylesheet" href="../static/vendors/iconly/bold.css">
+    <link rel="stylesheet" href="../static/css/main.css">
+
+    <link rel="stylesheet" href="../static/vendors/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="../static/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="../static/css/app.css">
+    <link rel="shortcut icon" href="../static/images/favicon.svg" type="image/x-icon">
+
+    <link href="https://cdn.jsdelivr.net/npm/vanilla-datatables@latest/dist/vanilla-dataTables.min.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    {% include 'layout/sidebar.html' %}
+        <div id="main">
+           {% include 'layout/header.html' %} 
+           {% block body %}
+           {% endblock %}
+        </div>
+    <script src="../static/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="../static/js/bootstrap.bundle.min.js"></script>
+
+    <script src="../static/vendors/apexcharts/apexcharts.js"></script>
+    <script src="../static/js/pages/dashboard.js"></script>
+
+    <script src="../static/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../static/js/dashboard.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-datatables@latest/dist/vanilla-dataTables.min.js" type="text/javascript"></script>
+    <script>
+        var dataTable = new DataTable("#myTable");
+
+        const orderDateField = document.getElementById('tanggal');
+
+        // Fungsi untuk mendapatkan tanggal hari ini dalam format YYYY-MM-DD
+        // const getTodayDate = () => {
+        //     const today = new Date();
+        //     const year = today.getFullYear();
+        //     const month = String(today.getMonth() + 1).padStart(2, '0'); // Bulan mulai dari 0
+        //     const day = String(today.getDate()).padStart(2, '0');
+        //     return `${year}-${month}-${day}`;
+        // };
+
+        // // Set nilai hidden field dengan tanggal hari ini
+        // orderDateField.value = getTodayDate();
+    </script>
+</body>
+
+</html>
