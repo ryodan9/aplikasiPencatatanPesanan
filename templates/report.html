@@ -147,10 +147,10 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <button type="button" class="btn btn-outline-primary btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#inlineForm{{order.id}}">
-                                    <i class="bi bi-eye"></i>
+                                <button type="button" class="btn btn-outline-primary btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#orderDetail{{ order.no_pesanan }}">
+                                    Detail
                                 </button>
-                                <div class="modal fade text-left" id="inlineForm{{order.id}}" tabindex="-1" role="dialog" aria-labelledby="viewModal" aria-hidden="true">
+                                <div class="modal fade text-left" id="orderDetail{{ order.no_pesanan }}" tabindex="-1" role="dialog" aria-labelledby="orderDetailModal{{ order.no_pesanan }}" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
                                         role="document">
                                         <div class="modal-content">

@@ -1,11 +1,15 @@
-from flask import Flask, render_template, request, redirect, url_for, send_file, jsonify
+from flask import Flask, render_template, request, redirect, url_for, send_file, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
+from flask_bcrypt import Bcrypt
 from datetime import datetime
 from sqlalchemy import extract, func
 
 import calendar
 import pandas as pd
+from functools import wraps
+
+from forms import Login
 
 from openpyxl import Workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
@@ -20,11 +24,24 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root@localhost/aplikasipencatat
 app.config['SQLALCHEMY_TRACK_MODIFICATION'] = True
 
 db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
 bootstrap = Bootstrap(app)
+
+class Admin(db.Model):
+    __tablename__ = 'admin'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(10))
+    password = db.Column(db.Text)
+
+    def __init__(self, username, password):
+        self.username = username
+        if password != '':
+            self.password = bcrypt.generate_password_hash(password). decode('UTF-8')
+        
 
 class Order(db.Model):
     __tablename__ = 'order'
-    id = db.Column(db.Integer, primary_key=True)
+    no_pesanan = db.Column(db.Integer, primary_key=True)
     nama_pemesan = db.Column(db.String(20))
     quantity = db.Column(db.Float)
     jelly = db.Column(db.String(5))
@@ -43,6 +60,15 @@ class Order(db.Model):
         self.tanggal = tanggal
 
 db.create_all()
+
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'login' in session:
+            return f(*args, **kwargs)
+        else:
+            return redirect(url_for('login'))
+    return wrap
 
 # Filter template (fungsi untuk mata uang)
 @app.template_filter('currency_format')
@@ -65,6 +91,13 @@ def month_name_filter(month):
 
 @app.route('/')
 def index():
+    if session.get('login') == True:
+        return redirect(url_for('dashboard'))
+    return redirect(url_for('login'))
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
     # get bulan dan tahun saat ini
     month = datetime.now().month
     year = datetime.now().year
@@ -90,6 +123,24 @@ def index():
     return render_template('main.html', monthly_product=monthly_product, total_product=total_product, 
                            monthly_income=monthly_income, total_income=total_income)
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if session.get('login') == True:
+        return redirect(url_for('dashboard'))
+    forms = Login()
+    if forms.validate_on_submit():
+        admin = Admin.query.filter_by(username=forms.username.data). first()
+        if admin:
+            if bcrypt.check_password_hash(admin.password, forms.password.data):
+                session['login'] = True
+                session['id'] = admin.id
+                session['username'] = admin.username
+                return redirect(url_for('dashboard'))
+        error = "Data yang anda masukkan salah"
+        return render_template('login.html', error=error, forms=forms)
+    return render_template('login.html', forms=forms)
+
+
 @app.route('/api/monthly-data', methods=['GET'])
 def monthly_data():
     # Ambil tahun dari parameter request, atau gunakan tahun saat ini
@@ -113,11 +164,13 @@ def monthly_data():
     return jsonify(data)
 
 @app.route('/order')
+@login_required
 def order():
     orders = Order.query.filter_by(status="In Progress").all()
     return render_template('order.html', orders=orders)
 
 @app.route('/tambahorder', methods=['GET', 'POST'])
+@login_required
 def tambah_order():
     if request.method == "POST":
         nama_pemesan = request.form['nama_pemesan']
@@ -149,6 +202,7 @@ def hapus_order(id):
     return redirect(request.referrer)
 
 @app.route('/report')
+@login_required
 def report():
     orders = Order.query.all()
 
@@ -302,6 +356,12 @@ def year_report():
         download_name=f"Laporan_Penjualan_{tahun}.xlsx",
         mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
+@app.route('/logout')
+@login_required
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run(debug=True)
