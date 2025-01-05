@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, send_file, jsonify, session
+from flask import Flask, render_template, request, redirect, url_for, send_file, jsonify, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
 from flask_bcrypt import Bcrypt
@@ -185,18 +185,18 @@ def tambah_order():
         db.session.commit()
         return redirect(url_for('order'))
 
-@app.route('/selesaiorder/<id>', methods=['GET', 'POST'])
-def selesai_order(id):
-    order = Order.query.filter_by(id=id). first()
+@app.route('/selesaiorder/<no_pesanan>', methods=['GET', 'POST'])
+def selesai_order(no_pesanan):
+    order = Order.query.filter_by(no_pesanan=no_pesanan). first()
     if request.method == "POST":
         order.status = "Completed"
         db.session.commit()
     return redirect(request.referrer)
 
 
-@app.route('/hapusorder/<id>', methods=['GET', 'POST'])
-def hapus_order(id):
-    order = Order.query.filter_by(id=id). first()
+@app.route('/hapusorder/<no_pesanan>', methods=['GET', 'POST'])
+def hapus_order(no_pesanan):
+    order = Order.query.filter_by(no_pesanan=no_pesanan). first()
     db.session.delete(order)
     db.session.commit()
     return redirect(request.referrer)
@@ -223,9 +223,13 @@ def month_report():
         db.extract('year', Order.tanggal) == tahun
     ).all()
 
+    if not orders:
+        flash(f"Tidak ada data pesanan untuk bulan {bulan} tahun {tahun}.", "warning")
+        return redirect(request.referrer or url_for('report'))
+
     # data order menjadi dataframe
     data = [{
-        "ID": order.id,
+        "No Pesanan": order.no_pesanan,
         "Nama Pemesan": order.nama_pemesan,
         "Quantity": order.quantity,
         "Jelly": order.jelly,
@@ -295,9 +299,14 @@ def year_report():
         db.extract('year', Order.tanggal) == tahun
     ).all()
 
+    # Periksa apakah ada data untuk tahun yang diminta
+    if not orders:
+        flash(f"Tidak ada data pesanan untuk tahun {tahun}.", "warning")
+        return redirect(request.referrer or url_for('report'))
+
     # Data order menjadi dataframe
     data = [{
-        "ID": order.id,
+        "No Pesanan": order.no_pesanan,
         "Nama Pemesan": order.nama_pemesan,
         "Quantity": order.quantity,
         "Jelly": order.jelly,

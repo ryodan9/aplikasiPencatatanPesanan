@@ -29,9 +29,20 @@
                             <form action="{{url_for('month_report')}}" method="POST">
                                 <div class="modal-body">
                                     <div class="form-group">
+                                        {% with messages = get_flashed_messages(with_categories=true) %}
+                                        {% if messages %}
+                                            <div class="alert-container">
+                                                {% for category, message in messages %}
+                                                    <div class="alert alert-{{ category }}" role="alert">
+                                                        {{ message }}
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                        {% endwith %}
                                         <label for="bulan">Bulan :</label>
                                         <select class="form-select col-10" id="inputGroupSelect01" name="bulan" required>
-                                            <option selected disabled>Choose...</option>
+                                            <option selected disabled value="">Choose...</option>
                                             {% for bulan, tahun in month_year %}
                                             <option value="{{bulan}}">{{ bulan|month_name }}</option>
                                             {% endfor %}
@@ -40,7 +51,7 @@
                                     <div class="form-group">
                                         <label for="tahun">Tahun :</label>
                                         <select class="form-select col-10" id="inputGroupSelect01" name="tahun" required>
-                                            <option selected disabled>Choose...</option>
+                                            <option selected disabled value="">Choose...</option>
                                             {% for bulan, tahun in month_year %}
                                             <option value="{{tahun}}">{{ tahun }}</option>
                                             {% endfor %}
@@ -82,10 +93,21 @@
                             </div>
                             <form action="{{url_for('year_report')}}" method="POST">
                                 <div class="modal-body">
+                                    {% with messages = get_flashed_messages(with_categories=true) %}
+                                        {% if messages %}
+                                            <div class="alert-container">
+                                                {% for category, message in messages %}
+                                                    <div class="alert alert-{{ category }}" role="alert">
+                                                        {{ message }}
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    {% endwith %}
                                     <div class="form-group">
                                         <label for="tahun">Tahun :</label>
                                         <select class="form-select col-10" id="inputGroupSelect01" name="tahun" required>
-                                            <option selected disabled>Choose...</option>
+                                            <option selected disabled value="">Choose...</option>
                                             {% for bulan, tahun in month_year %}
                                             <option value="{{tahun}}">{{ tahun }}</option>
                                             {% endfor %}

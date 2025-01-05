@@ -83,7 +83,7 @@
                 </div>
                 <div class="card-content">
                     <div class="card-body">
-                        <form class="form form-horizontal" action="/selesaiorder/{{order.id}}" method="POST">
+                        <form class="form form-horizontal" action="/selesaiorder/{{order.no_pesanan}}" method="POST">
                             <div class="form-body">
                                 <div class="row">
                                     <div class="col-md-4">
@@ -119,15 +119,15 @@
                                     </div>
                                     <div class="col-sm-12 d-flex justify-content-end mt-4">
                                         <!-- Selesai Button -->
-                                        <button type="button" class="btn btn-success me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modal_selesai{{order.id}}">
+                                        <button type="button" class="btn btn-success me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modal_selesai{{order.no_pesanan}}">
                                             Selesai
                                          </button>
-                                         <div class="modal fade text-left" id="modal_selesai{{order.id}}" tabindex="-1" role="dialog"
-                                                aria-labelledby="modalLabelSelesai{{ order.id }}" aria-hidden="true">
+                                         <div class="modal fade text-left" id="modal_selesai{{order.no_pesanan}}" tabindex="-1" role="dialog"
+                                                aria-labelledby="modalLabelSelesai{{ order.no_pesanan }}" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-scrollable" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="modalLabelSelesai{{ order.id }}">Konfirmasi</h5>
+                                                            <h5 class="modal-title" id="modalLabelSelesai{{ order.no_pesanan }}">Konfirmasi</h5>
                                                             <button type="button" class="close rounded-pill"
                                                                 data-bs-dismiss="modal" aria-label="Close">
                                                                 <i data-feather="x"></i>
@@ -151,15 +151,15 @@
                                                 </div>
                                             </div>
                                         <!-- Delete Button -->
-                                         <button type="button" class="btn btn-danger me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modal_hapus{{ order.id }}">
+                                         <button type="button" class="btn btn-danger me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modal_hapus{{ order.no_pesanan }}">
                                             Hapus
                                          </button>
-                                         <div class="modal fade text-left" id="modal_hapus{{ order.id }}" tabindex="-1" role="dialog"
-                                                aria-labelledby="modalLabelHapus{{ order.id }}" aria-hidden="true">
+                                         <div class="modal fade text-left" id="modal_hapus{{ order.no_pesanan}}" tabindex="-1" role="dialog"
+                                                aria-labelledby="modalLabelHapus{{ order.no_pesanan }}" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-scrollable" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="modalLabelHapus{{ order.id }}">Konfirmasi</h5>
+                                                            <h5 class="modal-title" id="modalLabelHapus{{ order.no_pesanan }}">Konfirmasi</h5>
                                                             <button type="button" class="close rounded-pill"
                                                                 data-bs-dismiss="modal" aria-label="Close">
                                                                 <i data-feather="x"></i>
@@ -173,7 +173,7 @@
                                                                 <i class="bx bx-x d-block d-sm-none"></i>
                                                                 <span class="d-none d-sm-block">Close</span>
                                                             </button>
-                                                            <a href="/hapusorder/{{order.id}}" class="btn btn-danger ml-1">
+                                                            <a href="/hapusorder/{{order.no_pesanan}}" class="btn btn-danger ml-1">
                                                                 <i class="bx bx-check d-block d-sm-none"></i>
                                                                 <span class="d-none d-sm-block">Hapus</span>
                                                             </a>
