@@ -162,10 +162,10 @@
                             <td>{{ order.alamat }}</td>
                             <td>{{ order.total_harga|currency_format }}</td>
                             <td>
-                                {% if order.status == "In Progress" %}
-                                <span class="badge bg-danger">In Progress</span>
+                                {% if order.status == "Dalam Proses" %}
+                                <span class="badge bg-danger">Dalam Proses</span>
                                 {% else %}
-                                <span class="badge bg-success">Completed</span>
+                                <span class="badge bg-success">Selesai</span>
                                 {% endif %}
                             </td>
                             <td>

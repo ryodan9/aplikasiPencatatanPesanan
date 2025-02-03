@@ -166,7 +166,7 @@ def monthly_data():
 @app.route('/order')
 @login_required
 def order():
-    orders = Order.query.filter_by(status="In Progress").all()
+    orders = Order.query.filter_by(status="Dalam Proses").all()
     return render_template('order.html', orders=orders)
 
 @app.route('/tambahorder', methods=['GET', 'POST'])
@@ -179,7 +179,7 @@ def tambah_order():
         alamat = request.form['alamat']
 
         total_harga = quantity * 8000
-        status = "In Progress"
+        status = "Dalam Proses"
         tanggal = datetime.now().date()
         db.session.add(Order(nama_pemesan, quantity, jelly, alamat, total_harga, status, tanggal))
         db.session.commit()
@@ -189,7 +189,7 @@ def tambah_order():
 def selesai_order(no_pesanan):
     order = Order.query.filter_by(no_pesanan=no_pesanan). first()
     if request.method == "POST":
-        order.status = "Completed"
+        order.status = "Selesai"
         db.session.commit()
     return redirect(request.referrer)
 
