@@ -14,6 +14,15 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-md-4 col-sm-100 mb-3">
+            <form method="GET" action="{{ url_for('order') }}">
+                <input type="text" id="searchInput" name="search" class="form-control" placeholder="Cari pesanan..." value="{{ request.args.get('search', '') }}">
+            </form>
+        </div>
+    </div>
+    
+    
 <section id="basic-horizontal-layouts">
     <div class="row match-height">
         <div class="col-md-4 col-12">

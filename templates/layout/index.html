@@ -43,6 +43,12 @@
     <script>
         var dataTable = new DataTable("#myTable");
 
+        document.getElementById('searchInput').addEventListener('input', function() {
+            let query = this.value;
+            let url = "{{ url_for('order') }}" + "?q=" + encodeURIComponent(query);
+            window.location.href = url;
+        });
+
         const orderDateField = document.getElementById('tanggal');
 
         // Fungsi untuk mendapatkan tanggal hari ini dalam format YYYY-MM-DD

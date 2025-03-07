@@ -166,7 +166,17 @@ def monthly_data():
 @app.route('/order')
 @login_required
 def order():
-    orders = Order.query.filter_by(status="Dalam Proses").all()
+    query = request.args.get('search')
+    if query:
+        orders = Order.query.filter(
+            Order.status == "Dalam Proses",
+            (
+                Order.nama_pemesan.ilike(f"%{query}%") |
+                Order.alamat.ilike(f"%{query}%")
+            )
+        ).all()
+    else:
+        orders = Order.query.filter_by(status="Dalam Proses").all()
     return render_template('order.html', orders=orders)
 
 @app.route('/tambahorder', methods=['GET', 'POST'])
